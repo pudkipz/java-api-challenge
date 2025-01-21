@@ -1,0 +1,139 @@
+openapi: 3.1.0
+info:
+  title: Java API Challenge - Core Criteria
+  description: API Challenge
+  version: 0.2.3
+  contact:
+    name: Java API Challenge
+
+
+servers:
+  - url: http://localhost:4000
+tags:
+  - name: dishwasher
+paths:
+  /dishwasher:
+    post:
+      tags:
+        - dishwasher
+      operationId: startProgram
+      summary: Start a program
+      description: Start a provided program if there is not one already running
+      parameters:
+        - name: program
+          in: query
+          description: Start the provided program if there is not a program already running
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Program started
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Program'
+        '400':
+          description: There is already a program running.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      tags:
+        - dishwasher
+      summary: Get available programs
+      description: Get all available programs
+      operationId: getPrograms
+      responses:
+        '200':
+          description: Get all programs
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllPrograms'
+    delete:
+      tags:
+        - dishwasher
+      summary: Cancel current program
+      description: Cancel the current program
+      operationId: stop
+      responses:
+        '200':
+          description: Cancel current program
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Program'
+
+  /dishwasher/current:
+    get:
+      tags:
+        - dishwasher
+      summary: Show current program
+      description: Show the program that is currently running
+      operationId: showCurrentProgram
+      responses:
+        '200':
+          description: Show the current program
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Program'
+
+  /dishwasher/history:
+    get:
+      tags:
+        - dishwasher
+      summary: Show previously run programs
+      description: Show the previous 150 programs run
+      operationId: showHistory
+      responses:
+        '200':
+          description: Show the previous programs
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllPrograms'
+  /dishwasher/statistics:
+    get:
+      tags:
+        - dishwasher
+      summary: Show statistics
+      description: Show statistics
+      operationId: showStats
+      responses:
+        '200':
+          description: Show some stats
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Statistics'
+components:
+  schemas:
+    Program:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Get-it-clean cycle"
+        waterConsumption:
+          type: number
+          example: 9.11
+        electricConsumption:
+          type: number
+          example: 1.11
+        runtime:
+          type: number
+          example: 43  # minutes
+    AllPrograms:
+      type: array
+      items:
+        $ref: '#/components/schemas/Program'
+    Statistics:
+      type: string  # tbd but could be a hashmap?
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Something went wrong!"
