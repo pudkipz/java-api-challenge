@@ -37,6 +37,12 @@ public class ProgramController {
         return repository.cancelProgram(LocalDateTime.now());
     }
 
+    @GetMapping("/current")
+    @ResponseStatus(HttpStatus.OK)
+    public Program getCurrentProgram() {
+        return repository.getCurrentProgram(LocalDateTime.now());
+    }
+
 
 }
 
