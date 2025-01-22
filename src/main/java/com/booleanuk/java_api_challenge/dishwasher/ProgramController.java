@@ -31,6 +31,12 @@ public class ProgramController {
         return repository.startProgram(program, LocalDateTime.now());
     }
 
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.OK)
+    public Program cancelProgram() {
+        return repository.cancelProgram(LocalDateTime.now());
+    }
+
 
 }
 

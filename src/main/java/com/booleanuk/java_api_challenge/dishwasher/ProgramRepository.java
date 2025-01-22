@@ -12,6 +12,13 @@ public class ProgramRepository {
         this.programHistory = new ArrayList<>();
     }
 
+    public Program cancelProgram(LocalDateTime now) {
+        if (programIsRunning(now)) {
+            return programHistory.removeLast();
+        }
+        return null;
+    }
+
     public Program startProgram(ProgramType program, LocalDateTime now) {
         if (programIsRunning(now)) {
             return null;
