@@ -7,33 +7,32 @@ import java.util.List;
 
 public class ProgramRepository {
     private final List<Program> programHistory;
-    private LocalDateTime currentProgramStartedAt;
 
     public ProgramRepository() {
         this.programHistory = new ArrayList<>();
     }
 
-    public Program startProgram(Program program) {  // return bool?
-        if (programIsRunning()) {
+    public Program startProgram(ProgramType program, LocalDateTime now) {
+        if (programIsRunning(now)) {
             return null;
         }
-        currentProgramStartedAt = LocalDateTime.now();
-        programHistory.add(program);
-        return program;
+        Program p = new Program(program, now);
+        programHistory.add(p);
+        return p;
     }
 
-    public Program startProgram(String program) {
-        return startProgram(Program.valueOf(program));
+    public Program startProgram(String program, LocalDateTime now) {
+        return startProgram(ProgramType.valueOf(program), now);
     }
 
-    public boolean programIsRunning() {
-        LocalDateTime now = LocalDateTime.now();
+    public boolean programIsRunning(LocalDateTime now) {
         return !programHistory.isEmpty()
-                && currentProgramStartedAt.plusMinutes(programHistory.getLast().getRuntimeMinutes())
-                .isAfter(LocalDateTime.now());
+                && programHistory.getLast().getStartedAt().plusMinutes(
+                        programHistory.getLast().getProgramType().getRuntimeMinutes())
+                .isAfter(now);
     }
 
-    public List<Program> getAll() {
-        return Arrays.asList(Program.values());
+    public List<ProgramType> getAll() {
+        return Arrays.asList(ProgramType.values());
     }
 }

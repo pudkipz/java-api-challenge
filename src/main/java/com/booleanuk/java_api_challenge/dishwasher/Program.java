@@ -1,36 +1,21 @@
 package com.booleanuk.java_api_challenge.dishwasher;
 
-public enum Program {
-    INTENSIVE70 ("Intensive 70", 13.5, 1.35, 150),
-    ECO50("Eco 50", 9, 0.65, 60),
-    HALFLOAD("Half Load", 10.5, 1.1, 40),
-    CLEANCYCLE("Clean Cycle", 14, 1.45, 55);
+import java.time.LocalDateTime;
 
-    private final String name;
-    private final double waterConsumption;
-    private final double electricConsumption;
-    private final int runtimeMinutes;
+public class Program {
+    private final ProgramType programType;
+    private final LocalDateTime startedAt;
 
-    Program(String name, double waterConsumption, double electricConsumption, int runtimeMinutes) {
-        this.name = name;
-        this.waterConsumption = waterConsumption;
-        this.electricConsumption = electricConsumption;
-        this.runtimeMinutes = runtimeMinutes;
+    public Program(ProgramType programType, LocalDateTime startedAt) {
+        this.programType = programType;
+        this.startedAt = startedAt;
     }
 
-    public String getName() {
-        return name;
+    public ProgramType getProgramType() {
+        return programType;
     }
 
-    public double getWaterConsumption() {
-        return waterConsumption;
-    }
-
-    public double getElectricConsumption() {
-        return electricConsumption;
-    }
-
-    public int getRuntimeMinutes() {
-        return runtimeMinutes;
+    public LocalDateTime getStartedAt() {
+        return startedAt;
     }
 }

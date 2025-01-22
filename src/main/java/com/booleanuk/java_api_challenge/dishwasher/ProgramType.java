@@ -1,16 +1,21 @@
 package com.booleanuk.java_api_challenge.dishwasher;
 
-public class ProgramDoNotUse {
+public enum ProgramType {
+    INTENSIVE70 ("Intensive 70", 13.5, 1.35, 150),
+    ECO50("Eco 50", 9, 0.65, 60),
+    HALFLOAD("Half Load", 10.5, 1.1, 40),
+    CLEANCYCLE("Clean Cycle", 14, 1.45, 55);
+
     private final String name;
     private final double waterConsumption;
     private final double electricConsumption;
-    private final int runtime;  // minutes
+    private final int runtimeMinutes;
 
-    public ProgramDoNotUse(String name, double waterConsumption, double electricConsumption, int runtime) {
+    ProgramType(String name, double waterConsumption, double electricConsumption, int runtimeMinutes) {
         this.name = name;
         this.waterConsumption = waterConsumption;
         this.electricConsumption = electricConsumption;
-        this.runtime = runtime;
+        this.runtimeMinutes = runtimeMinutes;
     }
 
     public String getName() {
@@ -25,7 +30,7 @@ public class ProgramDoNotUse {
         return electricConsumption;
     }
 
-    public int getRuntime() {
-        return runtime;
+    public int getRuntimeMinutes() {
+        return runtimeMinutes;
     }
 }
