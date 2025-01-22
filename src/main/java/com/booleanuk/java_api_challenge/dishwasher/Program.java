@@ -18,4 +18,20 @@ public class Program {
     public LocalDateTime getStartedAt() {
         return startedAt;
     }
+
+    public double getWaterConsumption() {
+        return getProgramType().getWaterConsumption();
+    }
+
+    public double getElectricConsumption() {
+        return getProgramType().getElectricConsumption();
+    }
+
+    public String getName() {
+        return getProgramType().getName();
+    }
+
+    public int getRuntimeMinutes() {
+        return getProgramType().getRuntimeMinutes();
+    }
 }

@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/dishwasher")
@@ -47,6 +48,12 @@ public class ProgramController {
     @ResponseStatus(HttpStatus.OK)
     public List<Program> programHistory() {
         return repository.getProgramHistory();
+    }
+
+    @GetMapping("/statistics")
+    @ResponseStatus(HttpStatus.OK)
+    public Map<String, Number> getStatistics() {
+        return repository.getStatistics();
     }
 
 }
