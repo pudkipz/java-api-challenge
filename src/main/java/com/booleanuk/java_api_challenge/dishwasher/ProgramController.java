@@ -43,6 +43,11 @@ public class ProgramController {
         return repository.getCurrentProgram(LocalDateTime.now());
     }
 
+    @GetMapping("/history")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Program> programHistory() {
+        return repository.getProgramHistory();
+    }
 
 }
 

@@ -12,6 +12,10 @@ public class ProgramRepository {
         this.programHistory = new ArrayList<>();
     }
 
+    public List<Program> getProgramHistory() {
+        return programHistory;
+    }
+
     public Program getCurrentProgram(LocalDateTime now) {
         if (programIsRunning(now)) {
             return programHistory.getLast();
@@ -32,6 +36,7 @@ public class ProgramRepository {
         }
         Program p = new Program(program, now);
         programHistory.add(p);
+        if (programHistory.size() > 150) programHistory.removeFirst();
         return p;
     }
 
