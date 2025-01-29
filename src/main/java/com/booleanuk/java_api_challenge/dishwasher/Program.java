@@ -1,6 +1,7 @@
 package com.booleanuk.java_api_challenge.dishwasher;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 public class Program {
     private final ProgramType programType;
@@ -33,5 +34,9 @@ public class Program {
 
     public int getRuntimeMinutes() {
         return getProgramType().getRuntimeMinutes();
+    }
+
+    public long getMinutesLeft(LocalDateTime now) {
+        return ChronoUnit.MINUTES.between(now, (startedAt.plusMinutes(getRuntimeMinutes())));
     }
 }

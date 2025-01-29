@@ -16,19 +16,28 @@ public class ProgramRepository {
         programHistory.add(new Program(ProgramType.HALFLOAD, LocalDateTime.now().minusDays(25)));
     }
 
+    private double getTotalWaterConsumption() {
+        return programHistory.stream().map(Program::getWaterConsumption).reduce(0.0, (a, b) -> a + b);
+    }
+
+    private double getTotalElectricityConsumption() {
+        return programHistory.stream().map(Program::getElectricConsumption).reduce(0.0, (a, b) -> a + b);
+    }
+
+    private int getTotalRuntime() {
+        return programHistory.stream().map(Program::getRuntimeMinutes).reduce(0, (a, b) -> a + b);
+    }
+
     public Map<String, Number> getStatistics() {
         // total / avg. water, electricity
         Map<String, Number> stats = new HashMap<>();
-        double totalWater = programHistory.stream().map(Program::getWaterConsumption).reduce(0.0, (a, b) -> a + b);
-        double totalElectricity = programHistory.stream().map(Program::getElectricConsumption).reduce(0.0, (a, b) -> a + b);
-        int totalRuntime = programHistory.stream().map(Program::getRuntimeMinutes).reduce(0, (a, b) -> a + b);
-        double avgWater = totalWater / programHistory.size();
-        double avgElectricity = totalElectricity / programHistory.size();
-        double avgRuntime = (double) totalRuntime / programHistory.size();
+        double avgWater = getTotalWaterConsumption() / programHistory.size();
+        double avgElectricity = getTotalElectricityConsumption() / programHistory.size();
+        double avgRuntime = (double) getTotalRuntime() / programHistory.size();
 
-        stats.put("total water consumption", totalWater);
-        stats.put("total electricity consumption", totalElectricity);
-        stats.put("total runtime", totalRuntime);
+        stats.put("total water consumption", getTotalWaterConsumption());
+        stats.put("total electricity consumption", getTotalElectricityConsumption());
+        stats.put("total runtime", getTotalRuntime());
         stats.put("average water consumption", avgWater);
         stats.put("average electricity consumption", avgElectricity);
         stats.put("average runtime", avgRuntime);
@@ -39,11 +48,46 @@ public class ProgramRepository {
         return programHistory;
     }
 
-    public Program getCurrentProgram(LocalDateTime now) {
+    public ProgramResponse getCurrentProgram(LocalDateTime now) {
+        ProgramResponse response = new ProgramResponse(null);
         if (programIsRunning(now)) {
-            return programHistory.getLast();
+            response = new ProgramResponse(programHistory.getLast());
         }
-        return null;
+
+        // Rinse aid
+        if (getTotalWaterConsumption() >= 40) {
+            response.addMessage("Out of Rinse Aid!");
+        } else if (getTotalWaterConsumption() > 30) {
+            response.addMessage("Rinse Aid low. Amount left: " + (1 - (getTotalWaterConsumption() / 40)) + "L.");
+        }
+
+        // Salt
+        if (getTotalWaterConsumption() >= 60) response.addMessage("Out of salt!");
+        else if (getTotalWaterConsumption() > 50) {
+            response.addMessage("Salt levels low. Amount left: " + (3 - (getTotalWaterConsumption() / 60)) + "L.");
+        }
+
+        // Tablets
+        if (programHistory.size() >= 63) {
+            response.addMessage("Out of tablets!");
+        }
+        else if (programHistory.size() > 58) {
+            response.addMessage("Almost of out tablets. Number of tablets left: " + (63 - programHistory.size()));
+        }
+
+        // Clean cycle
+        int timeSinceClean = 0;
+        for (Program p : programHistory.reversed()) {
+            timeSinceClean += p.getRuntimeMinutes();
+            if (p.getProgramType() == ProgramType.CLEANCYCLE) {
+                break;
+            }
+        }
+        if (timeSinceClean / 60 >= 50) {
+            response.addMessage("Clean cycle recommended. Time since last CC: " + timeSinceClean / 60);
+        }
+
+        return response;
     }
 
     public Program cancelProgram(LocalDateTime now) {

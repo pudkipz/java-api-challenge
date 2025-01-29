@@ -40,7 +40,7 @@ public class ProgramController {
 
     @GetMapping("/current")
     @ResponseStatus(HttpStatus.OK)
-    public Program getCurrentProgram() {
+    public ProgramResponse getCurrentProgram() {
         return repository.getCurrentProgram(LocalDateTime.now());
     }
 
@@ -55,6 +55,5 @@ public class ProgramController {
     public Map<String, Number> getStatistics() {
         return repository.getStatistics();
     }
-
 }
 
